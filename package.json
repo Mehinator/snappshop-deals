@@ -1,0 +1,13 @@
+{
+  "name": "snappshop-deal-checker",
+  "version": "1.0.0",
+  "description": "Find big discounts on SnappShop and verify them against Torob prices",
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
