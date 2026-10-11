@@ -16,8 +16,13 @@ export async function fetchJson(url, { method = "GET", headers = {}, body, retri
       // Torob answers 490 with a "are you a robot?" captcha page: stop, don't hammer it
       if (res.status === 490) throw Object.assign(new Error("BLOCKED: the site is showing a captcha (too many requests)"), { fatal: true, blocked: true });
       if (res.status === 429 || res.status >= 500) throw new Error(`HTTP ${res.status}`);
-      const json = await res.json();
-      if (!res.ok) throw Object.assign(new Error(`HTTP ${res.status}: ${JSON.stringify(json).slice(0, 200)}`), { fatal: true });
+      const text = await res.text();
+      let json;
+      try { json = JSON.parse(text); } catch {
+        // e.g. a block/challenge page instead of the API answer
+        throw new Error(`HTTP ${res.status}, not JSON: ${text.replace(/\s+/g, " ").slice(0, 300)}`);
+      }
+      if (!res.ok) throw Object.assign(new Error(`HTTP ${res.status}: ${text.slice(0, 200)}`), { fatal: true });
       return json;
     } catch (e) {
       if (e.fatal) throw e;
