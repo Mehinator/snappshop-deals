@@ -11,7 +11,7 @@ export function buildReport(rows, { minDiscount, createdAt }) {
     <tr data-v="${r.verdict.key}" data-claimed="${r.discount}" data-real="${r.realDiscount ?? -999}" data-final="${r.finalPrice}">
       <td class="img">${r.image ? `<img loading="lazy" src="${esc(r.image)}" alt="">` : ""}</td>
       <td class="title"><a href="${esc(r.url)}" target="_blank" rel="noopener">${esc(r.title)}</a>
-        ${r.torob ? `<div class="sub">ترب: <a href="${esc(r.torob.url)}" target="_blank" rel="noopener">${esc(r.torob.name)}</a></div>` : ""}
+        <div class="sub">${r.torob ? `ترب: <a href="${esc(r.torob.url)}" target="_blank" rel="noopener">${esc(r.torob.name)}</a> · ` : ""}<a href="https://torob.com/search/?query=${encodeURIComponent(r.title)}" target="_blank" rel="noopener">جستجو در ترب</a></div>
         ${r.notes?.length ? `<div class="notes">${r.notes.map(esc).join(" · ")}</div>` : ""}</td>
       <td><span class="badge" style="background:${r.verdict.color}">${r.verdict.label}</span></td>
       <td class="num">${pct(r.discount)}</td>
@@ -22,7 +22,7 @@ export function buildReport(rows, { minDiscount, createdAt }) {
     </tr>`).join("");
 
   const chips = Object.values(VERDICTS)
-    .map(v => `<label class="chip"><input type="checkbox" value="${v.key}" ${["notfound", "noprice", "unchecked"].includes(v.key) ? "" : "checked"}> <span class="dot" style="background:${v.color}"></span>${v.label} (${fmt(counts[v.key])})</label>`)
+    .map(v => `<label class="chip"><input type="checkbox" value="${v.key}" ${["notfound", "noprice"].includes(v.key) ? "" : "checked"}> <span class="dot" style="background:${v.color}"></span>${v.label} (${fmt(counts[v.key])})</label>`)
     .join("");
 
   return `<!doctype html>

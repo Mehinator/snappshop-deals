@@ -3,3 +3,5 @@ reports/
 cache/
 site/
 dist/
+sync-config.json
+logs/
